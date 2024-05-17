@@ -15,4 +15,4 @@ To run the application locally, follow these steps:
 1. Clone the repository:
 
    ```bash
-   git clone [https://github.com/yourusername/realtime-chat.git](https://github.com/Ashikurrahaman287/Real-time-Chat)
+   git clone https://github.com/Ashikurrahaman287/Real-time-Chat
