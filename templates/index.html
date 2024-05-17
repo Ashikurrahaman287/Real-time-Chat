@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real-time Chat</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f7f7f7;
+            color: #333;
+        }
+
+        .chat-box {
+            width: 80%;
+            margin: 20px auto;
+            max-width: 600px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .messages {
+            height: 300px;
+            overflow-y: scroll;
+            border-bottom: 1px solid #ddd;
+            padding: 10px;
+        }
+
+        .message {
+            padding: 5px;
+            margin-bottom: 5px;
+            background-color: #f2f2f2;
+            border-radius: 8px;
+        }
+
+        .input {
+            width: calc(100% - 20px);
+            padding: 10px;
+            box-sizing: border-box;
+            border: none;
+            border-radius: 8px;
+            margin: 0 10px;
+            margin-bottom: 10px;
+            font-size: 16px;
+            outline: none;
+        }
+
+        .input:focus {
+            border: 1px solid #3498db;
+        }
+
+        .input-btn {
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+            border: none;
+            border-radius: 8px;
+            background-color: #3498db;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+            outline: none;
+            transition: background-color 0.3s ease;
+        }
+
+        .input-btn:hover {
+            background-color: #2980b9;
+        }
+    </style>
+</head>
+<body>
+<div class="chat-box">
+    <div class="messages" id="messages"></div>
+    <input class="input" id="input" placeholder="Type a message...">
+    <button class="input-btn" id="sendBtn">Send</button>
+</div>
+
+<script>
+    const ws = new WebSocket('ws://' + window.location.host + '/ws');
+    const messages = document.getElementById('messages');
+    const input = document.getElementById('input');
+    const sendBtn = document.getElementById('sendBtn');
+
+    ws.onmessage = function(event) {
+        const message = document.createElement('div');
+        message.classList.add('message');
+        message.textContent = event.data;
+        messages.appendChild(message);
+        messages.scrollTop = messages.scrollHeight;
+    };
+
+    input.addEventListener('keypress', function(event) {
+        if (event.key === 'Enter') {
+            sendMessage();
+        }
+    });
+
+    sendBtn.addEventListener('click', sendMessage);
+
+    function sendMessage() {
+        const message = input.value.trim();
+        if (message !== '') {
+            ws.send(message);
+            input.value = '';
+        }
+    }
+</script>
+</body>
+</html>
